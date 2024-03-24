@@ -430,9 +430,9 @@ $("#rendamensal").val(formatter.format($("#rendamensal").val()));
 
 $("#rendamensal").focus();
 
-
-
 var dataNascimento = $("#dataNascimento").val();
+
+
 
 if (dataNascimento != null && dataNascimento != '') {
 

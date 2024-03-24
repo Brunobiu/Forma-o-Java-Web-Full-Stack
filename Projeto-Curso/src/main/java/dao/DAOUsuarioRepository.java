@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import beandto.BeanDtoGrafioSalarioUser;
 import connection.SingleConnectionBanco;
 import model.ModelLogin;
 import model.ModelTelefone;
@@ -21,6 +22,69 @@ public class DAOUsuarioRepository {
 	public DAOUsuarioRepository() {
 		connection = SingleConnectionBanco.getConnection();
 	}
+	
+	
+	public BeanDtoGrafioSalarioUser montarGraficoMediaSalario(Long userLogado, String dataInicial, String dataFinal) throws Exception {
+		
+		String sql = "select avg(rendamensal) as media_salarial, perfil from model_login where usuario_id = ? and datanascimento >= ? and datanascimento <= ? group by perfil";
+		PreparedStatement preparedStatement = connection.prepareStatement(sql);
+		
+		preparedStatement.setLong(1, userLogado);
+		preparedStatement.setDate(2, Date.valueOf(new SimpleDateFormat("yyyy-mm-dd").format(new SimpleDateFormat("dd/mm/yyyy").parse(dataInicial))));
+		preparedStatement.setDate(3, Date.valueOf(new SimpleDateFormat("yyyy-mm-dd").format(new SimpleDateFormat("dd/mm/yyyy").parse(dataFinal))));
+		
+		ResultSet resultSet = preparedStatement.executeQuery();
+		
+		List<String> perfis = new ArrayList<String>();
+		List<Double> salarios = new ArrayList<Double>();
+		
+		
+		BeanDtoGrafioSalarioUser beanDtoGrafioSalarioUser = new BeanDtoGrafioSalarioUser();
+		
+		while (resultSet.next()) {
+			Double media_salarial = resultSet.getDouble("media_salarial");
+			String perfil = resultSet.getString("perfil");
+			
+			perfis.add(perfil);
+			salarios.add(media_salarial);
+		}	
+		
+		beanDtoGrafioSalarioUser.setPerfis(perfis);
+		beanDtoGrafioSalarioUser.setSalarios(salarios);
+		
+		return beanDtoGrafioSalarioUser;
+	}
+	
+	public BeanDtoGrafioSalarioUser montarGraficoMediaSalario(Long userLogado) throws Exception {
+		
+		String sql = "select avg(rendamensal) as media_salarial, perfil from model_login where usuario_id = ? group by perfil";
+		PreparedStatement preparedStatement = connection.prepareStatement(sql);
+		preparedStatement.setLong(1, userLogado);
+		
+		ResultSet resultSet = preparedStatement.executeQuery();
+		
+		List<String> perfis = new ArrayList<String>();
+		List<Double> salarios = new ArrayList<Double>();
+		
+		
+		BeanDtoGrafioSalarioUser beanDtoGrafioSalarioUser = new BeanDtoGrafioSalarioUser();
+		
+		while (resultSet.next()) {
+			Double media_salarial = resultSet.getDouble("media_salarial");
+			String perfil = resultSet.getString("perfil");
+			
+			perfis.add(perfil);
+			salarios.add(media_salarial);
+		}	
+		
+		beanDtoGrafioSalarioUser.setPerfis(perfis);
+		beanDtoGrafioSalarioUser.setSalarios(salarios);
+		
+		return beanDtoGrafioSalarioUser;
+		
+	}
+	
+	
 	
 	
 	public ModelLogin gravarUsuario(ModelLogin objeto, Long userLogado ) throws Exception{
@@ -960,6 +1024,8 @@ public class DAOUsuarioRepository {
 		return retorno;
 		
 	}
+
+	
 	
 	
 	

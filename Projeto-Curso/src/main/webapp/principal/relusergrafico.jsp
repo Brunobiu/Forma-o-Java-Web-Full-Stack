@@ -114,31 +114,59 @@
 
 <script type="text/javascript">
 
-const ctx = document.getElementById('myChart');
 
 
+var myChart = new Chart(document.getElementById('myChart'));
 
 function gerargrafico() {
-new Chart(ctx, {
-  type: 'bar',
-  data: {
-    labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho'],
-    datasets: [{
-      label: 'Gráfico de Média Salarial por usúario',
-      data: [12, 19, 3, 5, 2, 3],
-      borderWidth: 1
-    }]
-  },
-  options: {
-    scales: {
-      y: {
-        beginAtZero: true
-      }
-    }
-  }
-});
 	
-}
+	var urlAction = document.getElementById('formUser').action;
+	var dataInicial = document.getElementById('dataInicial').value;
+	var dataFinal = document.getElementById('dataFinal').value;
+	
+    $.ajax({
+        method: "get",
+        url: urlAction,
+        data: "dataInicial=" + dataInicial + '&dataFinal=' + dataFinal + '&acao=graficoSalario',
+        success: function (response) {
+        	
+        	
+        	var json = JSON.parse(response);
+        	
+        	myChart.destroy();
+        	
+        	
+        	myChart = new Chart(
+        		document.getElementById('myChart'),
+        	{
+        		  type: 'bar',
+        		  data: {
+        		    labels: json.perfis,
+        		    datasets: [{
+        		      label: 'Gráfico de Média Salarial por usúario',
+        		      data: json.salarios,
+        		      borderWidth: 1
+        		    }]
+        		  },
+        		  options: {
+        		    scales: {
+        		      y: {
+        		        beginAtZero: true
+        		      }
+        		    }
+        		  }
+        		});
+            
+        }
+    }).fail(function (xhr, status, errorThrown) {
+        alert('Erro ao buscar dados para o Gráfico.' + xhr.responseText);
+    });
+	
+	
+	
+
+		
+	}
 
 
 
