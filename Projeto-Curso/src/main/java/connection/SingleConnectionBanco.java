@@ -6,9 +6,9 @@ import java.sql.DriverManager;
 public class SingleConnectionBanco { //Conexão com banco é somente uma,  as demais são sessões ou translações.
 	
 	
-	private static String banco = "jdbc:postgresql://localhost:5433/projeto-jsp?autoReconnect=true";
-	private static String user = "postgres";
-	private static String senha = "admin"; 
+	private static String banco = "jdbc:postgresql://localhost:5432/burno3778_projeto1?autoReconnect=true";
+	private static String user = "burno3778";
+	private static String senha = "fGmr9RIdMDH9uiO"; 
 	private static Connection connection = null;
 	
 	
@@ -33,7 +33,6 @@ public class SingleConnectionBanco { //Conexão com banco é somente uma,  as de
 				connection = DriverManager.getConnection(banco, user, senha);
 				connection.setAutoCommit(false); //Para nao efetiar operações no banco sem nosso comando
 			}
-			
 			
 			
 			
